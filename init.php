@@ -1,7 +1,7 @@
 <?php
 // 兼容windows/ 切换目录
 define("ROOTDIR",__DIR__);
-$tpl = 'new_project_tpl-master';
+$tpl = 'new_project_tpl';
 
 $workdir = str_replace('\\','/',__DIR__);
 // 替换\为/拷贝写入文件时使用
@@ -27,7 +27,7 @@ function make_dir($dirname){
 function find_and_rep($source_file,$target_file,$pattern,$replacement)
 {
     $current = file_get_contents($source_file);
-    $current =  preg_replace($pattern,$replacement,$current);     
+    $current =  preg_replace($pattern,$replacement,$current,2);     
     file_put_contents($target_file,$current);
     echo '已成功写入'.$target_file."\n";
 }
@@ -209,10 +209,11 @@ $aon_Controller_pattern = '/\\\aon\\\/';
 $aon_Controller_replacement = '\\'.$project_name.'\\';
 find_and_rep($source_core_controller_file,$new_core_controller_file,$aon_Controller_pattern,$aon_Controller_replacement);
 
+
 //替换aon_controller
 $aon_Controller_pattern = '/aon_Controller/';
 $aon_Controller_replacement =  $project_name.'_Controller';
-find_and_rep($source_core_controller_file,$new_core_controller_file,$aon_Controller_pattern,$aon_Controller_replacement);
+find_and_rep($new_core_controller_file,$new_core_controller_file,$aon_Controller_pattern,$aon_Controller_replacement);
 
 //============================================================
 
@@ -232,7 +233,23 @@ $tpl_dir = WORKDIR.'/'.$tpl;
 $new_dir = WORKDIR.'/'.$project_name;
 copy_all_file($tpl_dir,$new_dir);
 
-//============================================================================
+//=====================================================================================
 
-//修改
+//修改.gitlab-ci.yml 文件
+//======================================================================================
+$yml_file_path = $new_dir.'/'.'.gitlab-ci.yml';
+$yml_pattern = '/aon/';
+$yml_replacement = $project_name;
+find_and_rep($yml_file_path,$yml_file_path,$yml_pattern,$yml_replacement);
+//========================================================================================
+//================替换中文名称
+// mb_internal_encoding("UTF-8");
+// mb_regex_encoding("UTF-8");
+
+// $yml_pattern = '/新项目模版/';
+// fwrite(STDOUT, "请输入项目中文名称: "); 
+// $cn_name = trim(fgets(STDIN));
+// $yml_replacement = $cn_name;
+
+// find_and_rep($yml_file_path,$yml_file_path,$yml_pattern,$yml_replacement);
 
