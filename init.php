@@ -27,7 +27,7 @@ function make_dir($dirname){
 function find_and_rep($source_file,$target_file,$pattern,$replacement)
 {
     $current = file_get_contents($source_file);
-    $current =  preg_replace($pattern,$replacement,$current,2);     
+    $current =  preg_replace($pattern,$replacement,$current,1);     
     file_put_contents($target_file,$current);
     echo '已成功写入'.$target_file."\n";
 }
